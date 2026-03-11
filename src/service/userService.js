@@ -9,3 +9,11 @@ export const getAllUsers = () => {
 export const deleteUser = (id) => {
   return axios.delete(`${API_URL}/${id}`);
 };
+
+export const getUserById = (id) => {
+  return axios.get(`${API_URL}/${id}`);
+};
+
+export const updateUser = (id, data) => {
+  return axios.put(`${API_URL}/${id}`, data);
+};
