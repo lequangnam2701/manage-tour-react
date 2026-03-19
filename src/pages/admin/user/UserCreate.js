@@ -55,7 +55,7 @@ function UserCreate() {
 
       toast.success("Create user successfully");
 
-      navigate("/users");
+      navigate("/admin/users");
     } catch (error) {
       console.log(error);
       toast.error("Create failed");

@@ -10,8 +10,6 @@ function BookDetail() {
     const loadData = async () => {
       try {
         const res = await getBookDetail(id);
-        console.log("API DATA:", res.data);
-
         const data = Array.isArray(res.data) ? res.data : [res.data];
         setDetails(data);
       } catch (error) {

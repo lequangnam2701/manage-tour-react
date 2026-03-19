@@ -57,6 +57,7 @@ function RevenueYearChart() {
 
   const options = {
     responsive: true,
+
     plugins: {
       legend: {
         position: "top",
@@ -74,11 +75,12 @@ function RevenueYearChart() {
   };
 
   return (
-    <div className="-6 bg-white dark:bg-gray-800 text-black dark:text-white min-h-screen">
-      <h2 className="text-xl font-bold mb-6 text-black dark:text-white">
-        Doanh thu năm {year}
-      </h2>
-      {chartData.datasets && <Line data={chartData} options={options} />}
+    <div className="p-6 bg-white dark:bg-gray-800 text-black dark:text-white min-h-screen">
+      <h2 className="text-xl font-bold mb-6">Doanh thu năm {year}</h2>
+
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow p-6 h-[420px]">
+        {chartData.datasets && <Line data={chartData} options={options} />}
+      </div>
     </div>
   );
 }

@@ -1,20 +1,60 @@
-import axios from "axios";
-
 const API_URL = "http://localhost:8001/api/categories";
 
-export const getCategories = async () => {
-  const res = await axios.get(API_URL);
-  return res.data;
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const request = async (url, options = {}) => {
+  const res = await fetch(url, options);
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error);
+  }
+
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
+};
+
+export const getCategories = () => {
+  return request(API_URL, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };
 
 export const deleteCategory = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
+  return request(`${API_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };
 
-export const createCategory = async (id) => {
-  return axios.post(API_URL, id);
+export const createCategory = (data) => {
+  return request(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(data),
+  });
 };
 
-export const updateCategory = async (id, category) => {
-  return axios.put(`${API_URL}/${id}`, category);
+export const updateCategory = (id, category) => {
+  return request(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(category),
+  });
 };

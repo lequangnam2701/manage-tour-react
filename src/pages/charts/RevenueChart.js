@@ -29,9 +29,15 @@ function RevenueChart() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getRevenueByMonth(year);
+      const months = Array.from({ length: 12 }, (_, i) => i + 1);
+      const revenueMap = {};
 
-      const labels = res.data.map((item) => "T" + item.month);
-      const revenues = res.data.map((item) => item.amount);
+      res.forEach((item) => {
+        revenueMap[item.month] = item.amount;
+      });
+
+      const labels = months.map((m) => "T" + m);
+      const revenues = months.map((m) => revenueMap[m] || 0);
 
       setChartData({
         labels,
@@ -40,8 +46,10 @@ function RevenueChart() {
             label: "Doanh thu",
             data: revenues,
             borderColor: "#3b82f6",
-            backgroundColor: "#93c5fd",
+            backgroundColor: "rgba(59,130,246,0.2)",
             tension: 0.4,
+            fill: true,
+            pointRadius: 4,
           },
         ],
       });
@@ -50,12 +58,30 @@ function RevenueChart() {
     fetchData();
   }, [year]);
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
+  };
+
   if (!chartData) return <p className="text-gray-500">Loading chart...</p>;
 
   return (
     <>
       <h2 className="text-lg font-semibold mb-4">Revenue by Month</h2>
-      <Line data={chartData} />
+
+      <div className="h-[260px]">
+        <Line data={chartData} options={options} />
+      </div>
     </>
   );
 }

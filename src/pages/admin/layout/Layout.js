@@ -7,7 +7,7 @@ function Layout() {
     <div className="flex">
       <Sidebar />
 
-      <div className="flex-1">
+      <div className="flex-1 ml-64">
         <Header />
 
         <div className="">

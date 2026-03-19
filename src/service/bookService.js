@@ -1,56 +1,75 @@
-
-import axios from "axios";
-
 const API_URL = "http://localhost:8001/api";
 
-const getToken = () => {
-  return localStorage.getItem("token");
+const getAuthHeader = () => {
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
+
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const request = async (url, options = {}) => {
+  const res = await fetch(url, options);
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error);
+  }
+
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
 };
 
 export const getBooks = () => {
-  return axios.get(`${API_URL}/books`, {
+  return request(`${API_URL}/books`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
+      ...getAuthHeader(),
+    },
   });
 };
 
 export const getBookDetail = (id) => {
-  return axios.get(`${API_URL}/bookDetail/book/${id}`, {
+  return request(`${API_URL}/bookDetail/book/${id}`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
+      ...getAuthHeader(),
+    },
   });
 };
 
 export const confirmBook = (id) => {
-  return axios.get(`${API_URL}/books/confirm/${id}`, {
+  return request(`${API_URL}/books/confirm/${id}`, {
+    method: "PUT", 
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
+      ...getAuthHeader(),
+    },
   });
 };
 
 export const cancelBook = (id) => {
-  return axios.get(`${API_URL}/books/cancel/${id}`, {
+  return request(`${API_URL}/books/cancel/${id}`, {
+    method: "PUT",
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
+      ...getAuthHeader(),
+    },
   });
 };
 
 export const thanksBook = (id) => {
-  return axios.get(`${API_URL}/books/thanks/${id}`, {
+  return request(`${API_URL}/books/thanks/${id}`, {
+    method: "PUT",
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
+      ...getAuthHeader(),
+    },
   });
 };
 
 export const deleteBook = (id) => {
-  return axios.delete(`${API_URL}/books/${id}`, {
+  return request(`${API_URL}/books/${id}`, {
+    method: "DELETE",
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
+      ...getAuthHeader(),
+    },
   });
 };

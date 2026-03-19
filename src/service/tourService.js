@@ -1,33 +1,84 @@
-import axios from "axios";
-
 const API_URL = "http://localhost:8001/api/tours";
 
-export const getTours = async () => {
-  const res = await axios.get(API_URL);
-  return res.data;
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const request = async (url, options = {}) => {
+  const res = await fetch(url, options);
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(error);
+  }
+
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
+};
+
+export const getTours = () => {
+  return request(API_URL, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };
 
 export const deleteTour = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
+  return request(`${API_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };
 
-export const createTour = async (data) => {
-  return axios.post("http://localhost:8001/api/tours", data);
+export const createTour = (data) => {
+  return request(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(data),
+  });
 };
 
-export const updateTour = async (id, tour) => {
-  return axios.put(`${API_URL}/${id}`, tour);
+export const updateTour = (id, tour) => {
+  return request(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(tour),
+  });
 };
 
-export const getTourById = async (id) => {
-  const res = await axios.get(`${API_URL}/${id}`);
-  return res;
+export const getTourById = (id) => {
+  return request(`${API_URL}/${id}`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };
 
 export const searchTours = (query) => {
-  return axios.get(`${API_URL}/search?query=${query}`);
+  return request(`${API_URL}/search?query=${encodeURIComponent(query)}`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };
 
-export const getAllCategories = async () => {
-  return axios.get("http://localhost:8001/api/categories");
+export const getAllCategories = () => {
+  return request("http://localhost:8001/api/categories", {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
 };

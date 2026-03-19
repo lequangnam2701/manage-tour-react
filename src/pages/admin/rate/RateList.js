@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { deleteRate, getRates } from "../../../service/rateService";
+import Swal from "sweetalert2";
 
 function RateList() {
   const [rates, setRates] = useState([]);
@@ -21,17 +21,39 @@ function RateList() {
   });
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this rating?")) return;
+    const result = await Swal.fire({
+      title: "Bạn chắc chắn?",
+      text: "Đánh giá này sẽ bị xóa!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await deleteRate(id);
 
       setRates(rates.filter((item) => item.id !== id));
 
-      toast.success("Xóa đánh giá thành công");
+      Swal.fire({
+        icon: "success",
+        title: "Đã xóa",
+        text: "Xóa đánh giá thành công",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     } catch (error) {
       console.error(error);
-      toast.error("Xóa đánh giá thất bại");
+
+      Swal.fire({
+        icon: "error",
+        title: "Thất bại",
+        text: "Xóa đánh giá thất bại",
+      });
     }
   };
 

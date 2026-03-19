@@ -15,17 +15,15 @@ import { useState } from "react";
 function Sidebar() {
   const [openStatistical, setOpenStatistical] = useState(false);
   return (
-    <div className="w-56 h-screen bg-gray-900 text-white flex flex-col">
-      {/* Logo */}
+    <div className="w-64 fixed left-0 top-0 h-screen bg-gray-800 text-white flex flex-col">
       <div className="p-6 text-xl font-bold border-b border-gray-700">
         Admin Panel
       </div>
 
-      {/* Menu */}
       <ul className="flex flex-col p-4 gap-2">
         <li>
           <Link
-            to="/"
+            to="/admin"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaHome />
@@ -35,7 +33,7 @@ function Sidebar() {
 
         <li>
           <Link
-            to="/tours"
+            to="/admin/tours"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaMapMarkedAlt />
@@ -44,7 +42,7 @@ function Sidebar() {
         </li>
         <li>
           <Link
-            to="/users"
+            to="/admin/users"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaUsers />
@@ -54,7 +52,7 @@ function Sidebar() {
 
         <li>
           <Link
-            to="/category"
+            to="/admin/category"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaSuitcase />
@@ -64,7 +62,7 @@ function Sidebar() {
 
         <li>
           <Link
-            to="/rates"
+            to="/admin/rates"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaStar />
@@ -72,7 +70,6 @@ function Sidebar() {
           </Link>
         </li>
 
-        {/* Statistical dropdown */}
         <li>
           <div
             onClick={() => setOpenStatistical(!openStatistical)}
@@ -86,7 +83,7 @@ function Sidebar() {
             <ul className="ml-6 flex flex-col gap-2 mt-2">
               <li>
                 <Link
-                  to="/best-seller"
+                  to="/admin/best-seller"
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700"
                 >
                   <FaChartPie />
@@ -96,7 +93,7 @@ function Sidebar() {
 
               <li>
                 <Link
-                  to="/revenue"
+                  to="/admin/revenue"
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700"
                 >
                   <FaChartLine />
@@ -106,7 +103,7 @@ function Sidebar() {
 
               <li>
                 <Link
-                  to="/revenue/year/2025"
+                  to="/admin/revenue/year/2025"
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700"
                 >
                   <FaCalendarAlt />
@@ -118,7 +115,7 @@ function Sidebar() {
         </li>
         <li>
           <Link
-            to="/books"
+            to="/admin/books"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaCalendarAlt />
@@ -127,7 +124,7 @@ function Sidebar() {
         </li>
         <li>
           <Link
-            to="/books/1"
+            to="/admin/books/1"
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition"
           >
             <FaCalendarAlt />

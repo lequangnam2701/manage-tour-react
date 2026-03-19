@@ -7,7 +7,6 @@ import { getCategorySeller } from "../../service/statisticalService";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function BestSeller() {
-
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -15,11 +14,10 @@ function BestSeller() {
   }, []);
 
   const fetchData = async () => {
-
     const res = await getCategorySeller();
 
-    const labels = res.data.map(i => i.name);
-    const counts = res.data.map(i => i.count);
+    const labels = res.map((i) => i.name);
+    const counts = res.map((i) => i.count);
 
     setChartData({
       labels,
@@ -39,13 +37,25 @@ function BestSeller() {
     });
   };
 
-  if (!chartData)
-    return <p className="text-gray-500">Loading chart...</p>;
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
+  };
+
+  if (!chartData) return <p className="text-gray-500">Loading chart...</p>;
 
   return (
     <>
       <h2 className="text-lg font-semibold mb-4">Best Seller Category</h2>
-      <Pie data={chartData} />
+
+      <div className="h-[250px] flex justify-center items-center">
+        <Pie data={chartData} options={options} />
+      </div>
     </>
   );
 }

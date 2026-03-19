@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getTourById, updateTour } from "../../../service/tourService";
+import Swal from "sweetalert2";
 
 function TourEdit() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ function TourEdit() {
     const fetchTour = async () => {
       try {
         const res = await getTourById(id);
-       
+
         setTour(res.data); // nếu dùng axios
       } catch (error) {
         toast.error("Không lấy được dữ liệu tour");
@@ -42,11 +43,21 @@ function TourEdit() {
     try {
       await updateTour(id, tour);
 
-      toast.success("Cập nhật tour thành công");
+      await Swal.fire({
+        icon: "success",
+        title: "Thành công",
+        text: "Cập nhật tour thành công",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
-      navigate("/tours");
+      navigate("/admin/tours");
     } catch (error) {
-      toast.error("Cập nhật thất bại");
+      Swal.fire({
+        icon: "error",
+        title: "Thất bại",
+        text: "Cập nhật tour thất bại",
+      });
     }
   };
 

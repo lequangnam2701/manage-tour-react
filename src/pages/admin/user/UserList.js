@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { deleteUser, getAllUsers } from "../../../service/userService";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +11,8 @@ const UserList = () => {
   const fetchUsers = async () => {
     try {
       const res = await getAllUsers();
-      setUsers(res.data);
+      setUsers(res);
+      console.log(res);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -25,21 +26,49 @@ const UserList = () => {
     try {
       await deleteUser(id);
 
-      toast.success("Xóa user thành công");
+      Swal.fire({
+        icon: "success",
+        title: "Đã xóa",
+        text: "Xóa user thành công",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
       fetchUsers();
     } catch (error) {
       console.error(error);
-      toast.error("Xóa thất bại");
+
+      Swal.fire({
+        icon: "error",
+        title: "Thất bại",
+        text: "Xóa user thất bại",
+      });
     }
+  };
+
+  const handleDeleteConfirm = (id) => {
+    Swal.fire({
+      title: "Bạn chắc chắn?",
+      text: "User sẽ bị xóa vĩnh viễn!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(id);
+      }
+    });
   };
 
   return (
     <div className="p-6 bg-white dark:bg-gray-800 text-black dark:text-white min-h-screen text-xs">
-      <h2 className="text-xl font-bold mb-6 ">Total Users: {users.length}</h2>{" "}
+      <h2 className="text-xl font-bold mb-6 ">Total Users: {users?.length}</h2>
       <h2 className="text-2xl font-bold mb-6  text-center">User List</h2>
       <button className="mb-5 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
-        <Link to="/users/create">Add New User</Link>
+        <Link to="/admin/users/create">Add New User</Link>
       </button>
       <div
         className="overflow-x-auto shadow-lg rounded-xl
@@ -64,7 +93,7 @@ const UserList = () => {
           </thead>
 
           <tbody>
-            {users.map((user) => (
+            {users?.map((user) => (
               <tr
                 key={user.userId}
                 className="border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-600"
@@ -107,8 +136,8 @@ const UserList = () => {
                   </button>
 
                   <button
-                    onClick={() => handleDelete(user.userId)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-xs"
+                    onClick={() => handleDeleteConfirm(user.userId)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 text-xs rounded"
                   >
                     Delete
                   </button>

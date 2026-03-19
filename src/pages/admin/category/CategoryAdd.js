@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { createCategory } from "../../../service/categoryService";
+import Swal from "sweetalert2";
 
 function CategoryAdd() {
   const [categoryName, setCategoryName] = useState("");
@@ -14,13 +14,28 @@ function CategoryAdd() {
       categoryName: categoryName,
     };
 
-    await createCategory(data);
+    try {
+      await createCategory(data);
 
-    toast.success("Thêm loại tour thành công");
+      await Swal.fire({
+        icon: "success",
+        title: "Thành công",
+        text: "Thêm loại tour thành công",
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
-    navigate("/categories");
+      navigate("/admin/category");
+    } catch (error) {
+      console.error(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Thất bại",
+        text: "Không thể thêm loại tour",
+      });
+    }
   };
-
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-800 text-black dark:text-white">
       <form

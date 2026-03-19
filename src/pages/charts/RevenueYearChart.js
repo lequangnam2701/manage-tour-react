@@ -21,11 +21,10 @@ ChartJS.register(
   PointElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 function RevenueYearChart() {
-
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -33,11 +32,9 @@ function RevenueYearChart() {
   }, []);
 
   const fetchData = async () => {
-
     const res = await getRevenueYears();
-
-    const labels = res.data.map(i => i[0]);
-    const revenues = res.data.map(i => i[1]);
+    const labels = res.map((i) => i[0]);
+    const revenues = res.map((i) => i[1]);
 
     setChartData({
       labels,
@@ -53,9 +50,7 @@ function RevenueYearChart() {
       ],
     });
   };
-
-  if (!chartData)
-    return <p>Loading chart...</p>;
+  if (!chartData) return <p>Loading chart...</p>;
 
   return (
     <>

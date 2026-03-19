@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import {
   deleteCategory,
   getCategories,
 } from "../../../service/categoryService";
+import Swal from "sweetalert2";
 
 function CategoryList() {
   const [categories, setCategories] = useState([]);
@@ -20,14 +20,42 @@ function CategoryList() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn xóa loại tour này?")) {
-      await deleteCategory(id);
-      toast.success("Xóa loại tour thành công");
-      fetchCategories();
+    const result = await Swal.fire({
+      title: "Bạn chắc chắn?",
+      text: "Loại tour này sẽ bị xóa!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteCategory(id);
+
+        Swal.fire({
+          icon: "success",
+          title: "Đã xóa",
+          text: "Xóa loại tour thành công",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+
+        fetchCategories();
+      } catch (error) {
+        console.error(error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Thất bại",
+          text: "Không thể xóa loại tour",
+        });
+      }
     }
   };
 
-  // filter theo categoryId
   const filteredCategories = categories.filter((item) =>
     item.categoryId.toString().includes(searchId),
   );
@@ -40,13 +68,12 @@ function CategoryList() {
 
       <div className="flex justify-between mb-4">
         <Link
-          to="/category/add"
+          to="/admin/category/add"
           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
         >
           Add Category
         </Link>
 
-        {/* Search */}
         <input
           type="text"
           placeholder="Search by ID..."
