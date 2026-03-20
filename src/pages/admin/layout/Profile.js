@@ -1,48 +1,86 @@
 import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { getToken } from "../../../utils/auth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-function Profile() {
+const BASE_URL = "http://localhost:8001";
+
+function buildImageUrl(path) {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+
+  return `${BASE_URL}/${encodeURI(path.replace(/^\/+/, ""))}`;
+}
+
+function ProfileUser() {
   const storedUser = JSON.parse(localStorage.getItem("user"));
 
   const [name, setName] = useState(storedUser?.name || "");
   const [email] = useState(storedUser?.email || "");
-  const [preview, setPreview] = useState(storedUser?.avatar || null);
+  const [user, setUser] = useState(storedUser || {});
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(buildImageUrl(storedUser?.image));
   const navigate = useNavigate();
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
 
-    setPreview(URL.createObjectURL(file));
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
   };
 
- const handleSave = () => {
-  const updatedUser = {
-    ...storedUser,
-    name,
-    avatar: preview,
+  const handleSave = async () => {
+    try {
+      const token = getToken();
+
+      const formData = new FormData();
+      formData.append("id", user.id);
+      formData.append("name", name);
+      if (file) formData.append("file", file);
+
+      const res = await fetch(`${BASE_URL}/api/users/update`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      // setPreview(buildImageUrl(data.image));
+      setUser(data);
+      console.log("------------", user);
+
+      localStorage.setItem("user", JSON.stringify(data));
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Profile updated successfully!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      setTimeout(() => {
+        navigate("/admin");
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Update failed!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
   };
-
-  localStorage.setItem("user", JSON.stringify(updatedUser));
-
-  Swal.fire({
-    icon: "success",
-    title: "Success",
-    text: "Profile updated successfully!",
-    timer: 2000,
-    showConfirmButton: false,
-  });
-
-  navigate("/admin", { replace: true });
-};
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center 
-    bg-gray-100 dark:bg-gray-900 text-black dark:text-white p-6"
-    >
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-black dark:text-white p-6">
       <div className="w-full max-w-lg">
         <h1 className="text-2xl font-semibold mb-6 text-center">My Profile</h1>
 
@@ -63,37 +101,26 @@ function Profile() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-gray-500 dark:text-gray-300">
-                Name
-              </label>
-
+              <label className="block text-sm text-gray-500">Name</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border p-2 rounded 
-                bg-gray-50 dark:bg-gray-700 
-                text-black dark:text-white"
+                className="w-full border p-2 rounded bg-gray-50"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-gray-500 dark:text-gray-300">
-                Email
-              </label>
-
+              <label className="block text-sm text-gray-500">Email</label>
               <input
                 value={email}
                 readOnly
-                className="w-full border p-2 rounded 
-                bg-gray-50 dark:bg-gray-700 
-                text-black dark:text-white"
+                className="w-full border p-2 rounded bg-gray-50"
               />
             </div>
 
             <button
               onClick={handleSave}
-              className="w-full mt-4 bg-blue-500 hover:bg-blue-600 
-              text-white py-2 rounded-lg transition"
+              className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
             >
               Save Profile
             </button>
@@ -104,4 +131,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfileUser;

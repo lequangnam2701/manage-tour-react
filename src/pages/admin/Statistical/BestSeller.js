@@ -17,8 +17,8 @@ function BestSeller() {
   const loadData = async () => {
     const res = await getCategorySeller();
 
-    const labels = res.data.map((item) => item.name);
-    const counts = res.data.map((item) => item.count);
+    const labels = res.data?.map((item) => item.name) || [];
+    const counts = res.data?.map((item) => item.count) || [];
 
     setChartData({
       labels: labels,

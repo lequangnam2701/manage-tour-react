@@ -179,11 +179,12 @@ function TourCreate() {
           >
             <option value="">Select Category</option>
 
-            {categories.map((c) => (
-              <option key={c.categoryId} value={c.categoryId}>
-                {c.categoryName}
-              </option>
-            ))}
+            {categories &&
+              categories.map((c) => (
+                <option key={c.categoryId} value={c.categoryId}>
+                  {c.categoryName}
+                </option>
+              ))}
           </select>
 
           <button

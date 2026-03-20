@@ -69,7 +69,7 @@ function TourEdit() {
         <input
           type="text"
           name="name"
-          value={tour.name || ""}
+          value={tour?.name || ""}
           onChange={handleChange}
           placeholder="Tour Name"
           className="w-full border p-2 rounded"
@@ -78,7 +78,7 @@ function TourEdit() {
         <input
           type="number"
           name="price"
-          value={tour.price || ""}
+          value={tour?.price || ""}
           onChange={handleChange}
           placeholder="Price"
           className="w-full border p-2 rounded"
@@ -87,7 +87,7 @@ function TourEdit() {
         <input
           type="number"
           name="discount"
-          value={tour.discount || ""}
+          value={tour?.discount || ""}
           onChange={handleChange}
           placeholder="Discount"
           className="w-full border p-2 rounded"
@@ -96,7 +96,7 @@ function TourEdit() {
         <input
           type="number"
           name="quantity"
-          value={tour.quantity || ""}
+          value={tour?.quantity || ""}
           onChange={handleChange}
           placeholder="Quantity"
           className="w-full border p-2 rounded"
@@ -104,7 +104,7 @@ function TourEdit() {
 
         <textarea
           name="description"
-          value={tour.description || ""}
+          value={tour?.description || ""}
           onChange={handleChange}
           placeholder="Description"
           className="w-full border p-2 rounded"

@@ -12,7 +12,6 @@ const UserList = () => {
     try {
       const res = await getAllUsers();
       setUsers(res);
-      console.log(res);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -93,7 +92,7 @@ const UserList = () => {
           </thead>
 
           <tbody>
-            {users?.map((user) => (
+            {users.map((user) => (
               <tr
                 key={user.userId}
                 className="border-b hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-600"

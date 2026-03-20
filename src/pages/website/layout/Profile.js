@@ -10,7 +10,6 @@ function buildImageUrl(path) {
   if (!path) return null;
   if (path.startsWith("http")) return path;
 
-  // encode URI để browser load được
   return `${BASE_URL}/${encodeURI(path.replace(/^\/+/, ""))}`;
 }
 
@@ -50,10 +49,10 @@ function ProfileUser() {
       });
 
       const data = await res.json();
-
+      localStorage.setItem("user", JSON.stringify(data));
+      window.dispatchEvent(new Event("user-updated"));
       setPreview(buildImageUrl(data.image));
       setUser(data);
-      localStorage.setItem("user", JSON.stringify(data));
 
       Swal.fire({
         icon: "success",
@@ -64,7 +63,8 @@ function ProfileUser() {
       });
 
       setTimeout(() => {
-        navigate("/"); // redirect về /
+        navigate("/");
+        window.dispatchEvent(new Event("user-updated"));
       }, 2000);
     } catch (err) {
       console.error(err);

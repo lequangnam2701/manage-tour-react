@@ -90,11 +90,11 @@ function Header() {
             onClick={() => setOpenMenu(!openMenu)}
             className="flex items-center gap-2 cursor-pointer"
           >
-            {user?.avatar ? (
+            {user?.image ? (
               <img
-                src={user.avatar}
+                src={`http://localhost:8001${user.image}`}
                 alt="avatar"
-                className="w-8 h-8 rounded-full object-cover"
+                className="w-10 h-10 rounded-full"
               />
             ) : (
               <FaUserCircle size={24} />
@@ -113,9 +113,9 @@ function Header() {
               transform transition-all duration-200"
             >
               <div className="flex items-center gap-4 mb-4">
-                {user?.avatar ? (
+                {user?.image ? (
                   <img
-                    src={user.avatar}
+                    src={`http://localhost:8001${user.image}`}
                     alt="avatar"
                     className="w-[70px] h-[70px] rounded-full object-cover"
                   />

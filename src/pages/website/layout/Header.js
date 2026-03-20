@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 
 function Header() {
-  const [user] = useState(JSON.parse(localStorage.getItem("user")));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [mobileMenu, setMobileMenu] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -27,7 +27,18 @@ function Header() {
     window.location.reload();
   };
 
-  // Detect click outside menu to close it
+  useEffect(() => {
+    const handleUserUpdated = () => {
+      setUser(JSON.parse(localStorage.getItem("user")));
+    };
+
+    window.addEventListener("user-updated", handleUserUpdated);
+
+    return () => {
+      window.removeEventListener("user-updated", handleUserUpdated);
+    };
+  }, []);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
